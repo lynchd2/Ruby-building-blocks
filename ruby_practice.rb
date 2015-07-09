@@ -6,7 +6,7 @@ the end of the index in the alphabet aray
 =end
 
 def c_c(sentence="Sentence test", num=2)
-	alphabet = ("A".."Z").to_a + ("a".."z").to_a
+	alphabet = ("a".."z").to_a + ("A".."Z").to_a 
 	s = sentence.split("")
 	new_s = []
 	s.each do |letter|
