@@ -65,22 +65,15 @@ class Game
 	  	until @count == 0
 		  	if @count % 2 != 0
 		  		current_player = @player1
-		  		print_board
-		  		puts "#{current_player.name} who has #{current_player.symbol}: please pick a number on the board for your move:"
-		  		move = gets.chomp.to_i
-		  		check_move(move, current_player)
-		  		@count -= 1
-		  		check_win(current_player)
-
 		  	else
 		  		current_player = @player2
+		  	end
 		  		print_board
 		  		puts "#{current_player.name} who has #{current_player.symbol}: please pick a number on the board for your move"
 		  		move = gets.chomp.to_i
 		  		check_move(move, current_player)
 		  		@count -= 1
 		  		check_win(current_player)
-	  		end
 	  	end
 	  	print_board
 	  	puts "The game ended in a tie!"
