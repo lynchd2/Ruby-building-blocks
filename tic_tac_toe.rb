@@ -1,39 +1,38 @@
 class Game
 	attr_accessor :board
-	class Player 
-		attr_reader :name, :symbol
-		def initialize(name, symbol)
-			@name = name
-			@symbol = symbol
-		end
-	end
+	Player = Struct.new(:name, :symbol)
 
 	def initialize
 		get_player
-		puts "Ok. #{@player1.name}'s symbol is #{@player1.symbol}"
-		puts "And #{@player2.name}'s symbol is #{@player2.symbol}. Let's play!"
+		puts ""
+		puts ""
+		puts "#{@player1.name}'s symbol is #{@player1.symbol}"
+		puts "#{@player2.name}'s symbol is #{@player2.symbol}."
+		puts "Let's play!"
 		@count = 9
 		@board = board
 
 	end
 
-	def check_win
+	def check_win(current_player)
 		win = [[0, 1 ,2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
 			   [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
-		p @board
 		win.each do |i|
 			i.all? do |x| 
-				if @board[x] == :X
-					puts "Win"
-				end
+			if i.all? {|x| @board[x] == current_player.symbol} 
+				puts ""
+				puts ""
+				puts "#{current_player.name} WINS!"
+				exit
 			end
+		end
 		end
 	end
 
 	def get_player
-		puts "What is your name, Player 1?"
+		puts "What is your name, Player 1?\n"
 		name1, symbol1 = gets.chomp
-		puts "And what is your name, Player 2?"
+		puts "And what is your name, Player 2?\n"
 		name2, symbol2 = gets.chomp
 		if rand > 0.5 
 			symbol1, symbol2 = :X, :O
@@ -71,7 +70,7 @@ class Game
 		  		move = gets.chomp.to_i
 		  		check_move(move, current_player)
 		  		@count -= 1
-		  		check_win
+		  		check_win(current_player)
 
 		  	else
 		  		current_player = @player2
@@ -80,7 +79,7 @@ class Game
 		  		move = gets.chomp.to_i
 		  		check_move(move, current_player)
 		  		@count -= 1
-		  		check_win
+		  		check_win(current_player)
 	  		end
 	  	end
 	  	print_board
