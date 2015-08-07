@@ -83,11 +83,8 @@ class Game
 	  def check_move(move, player)
 	  		if @board[move - 1] != :X && @board[move - 1] != :O
 	  			@board[move - 1] = player.symbol
-	  		elsif @board[move - 1] == :X
+	  		elsif (@board[move - 1] == :X) || (@board[move - 1] == :O)
 	  			puts "Someone already put it there. Try again."
-	  			@count += 1
-	  		elsif @board[move - 1] == :O
-	  			puts "Someone already moved there. Try again."
 	  			@count += 1
 	  		end
 	  end
