@@ -53,7 +53,7 @@ def most_popular_hour(contents, hours_array)
 	end
 end
 def days(reg_date)
-	DateTime.strptime(reg_date, '%m/%d/%Y %H:%M').wday
+	Date.strptime(reg_date,"%m/%d/%Y").strftime("%A")
 end
 
 def most_popular_day(contents, days_array)
@@ -61,7 +61,6 @@ def most_popular_day(contents, days_array)
 	day = days_array.max_by { |v| freq[v] }	
 	if contents.eof?
 		puts "#{day} was the most popular day"
-		puts freq
 	end
 end
 
