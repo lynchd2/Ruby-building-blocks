@@ -28,19 +28,20 @@ end
 
 class Game
 	attr_reader :board, :answer, :player_guess
-	def initialize(body)
+	def initialize
 		x = Board.new
 		x.random_answer
 		@answer = x.answer_on_board
 		@board = x.hangman_board
 		puts "You have five guessess left. Please pick a letter"
-		@body = body
+		@body = 5
 	end
 
 	def check_guess
 		answer.each_with_index do |letter, index|
 			if letter == player_guess
 				board[index] = letter
+				@body += 1
 			end
 		end
 	end
@@ -50,12 +51,12 @@ class Game
 	end
 
 	def play
-		until body == 0
+		until @body == 0
 			guess
 			check_guess
 			p @board
-			body -= 1
-			p body
+			@body -= 1
+			p @body
 		end
 	end
 
