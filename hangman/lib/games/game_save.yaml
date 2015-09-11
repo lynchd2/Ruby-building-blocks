@@ -1,6 +1,6 @@
 --- !ruby/object:Game
 body: 2
-random_answer: trailblazer
+random_answer: garishly
 board:
 - ''
 - ''
@@ -10,19 +10,13 @@ board:
 - ''
 - ''
 - ''
-- ''
-- ''
-- ''
 answer:
-- t
-- r
+- g
 - a
+- r
 - i
+- s
+- h
 - l
-- b
-- l
-- a
-- z
-- e
-- r
+- y
 player_guess: save

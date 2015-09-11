@@ -32,7 +32,8 @@ class Game
 	def initialize
 		@body = 6
 		puts "Welcome to Hangman! Make sure to input"
-		puts "only one letter at a time. Have fun!"
+		puts "only one letter at a time"
+		puts "Enter 'load' to load a prior game save. Have fun!"
 		puts "\n"
 	end
 
@@ -63,7 +64,7 @@ private
 
 	def guess
 		@player_guess = gets.chomp.to_s.downcase
-		until ('a'..'z').include?(@player_guess)
+		unless ('a'..'z').include?(@player_guess) || (player_guess == "save" || player_guess == "load")
 			puts "Invalid. Try again"
 			p @board
 			@player_guess = gets.chomp.to_s.downcase
