@@ -1,0 +1,28 @@
+--- !ruby/object:Game
+body: 2
+random_answer: trailblazer
+board:
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+answer:
+- t
+- r
+- a
+- i
+- l
+- b
+- l
+- a
+- z
+- e
+- r
+player_guess: save

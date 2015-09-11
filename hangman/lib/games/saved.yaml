@@ -1,0 +1,19 @@
+--- !ruby/object:Game
+body: 5
+answer:
+- A
+- r
+- g
+- o
+- l
+- i
+- s
+board:
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+- ''
+player_guess: save
