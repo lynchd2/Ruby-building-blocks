@@ -73,7 +73,7 @@ class MicroBlogger
 	def shorten(original_url)
 		bitly = Bitly.new('hungryacademy', 'R_430e9f62250186d2612cca76eee2dbc6')
 		puts "Shortening this URL: #{original_url}"
-		puts bitly.shorten('original_url')
+		bitly.shorten(original_url).short_url
 	end
 end
 
