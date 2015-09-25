@@ -1,4 +1,6 @@
 require 'socket'
+require 'json'
+
 def find_method(response)
   response[0]
 end
@@ -7,12 +9,24 @@ def find_path(response)
   response[1][1..-1]
 end
 
+def json_object(response)
+  body[0]
+end
+
+
 server = TCPServer.open(2002)  
 
 loop {                         
   client = server.accept
+  body = ""
+  while line = client.gets
+    body << line
+  end
 
-  response = client.gets.split(" ")
+  body = body.chomp.chomp
+  puts body
+
+
   if File.exist?(find_path(response))
     file = File.read(find_path(response))
     client.puts "HTTP/1.1 200 OK\r\n" +
