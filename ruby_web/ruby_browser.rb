@@ -3,7 +3,6 @@ require 'json'
 
 host = 'localhost'
 port = 2002                     
-path = "/index.html"
 
 def method(number)
 	if number == 1
@@ -27,6 +26,7 @@ def details_for_post
 	puts "And their email?"
 	email = gets.chomp
 	information = {:viking => {:name => name, :email =>email}}.to_json
+	information
 end
 
 
@@ -39,11 +39,11 @@ until number == 1 || number == 2
 	number = gets.chomp.to_i
 end
 
-request = "#{method(number)} #{path(number)} HTTP/1.1" + 
-		  "\r\n\r\n" + 
-		  "#{details_for_post}"
-
-
+if number == 2
+	request = "#{method(number)} #{path(number)} HTTP/1.1\r\n\r\n#{details_for_post}\r\n\r\n"
+else
+	request = "#{method(number)} #{path(number)} HTTP/1.1\r\n\r\n"
+end
 
 socket = TCPSocket.open(host,port)
 
