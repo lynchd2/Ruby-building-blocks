@@ -1,6 +1,6 @@
-def fibs(n)
-	return n if n < 2
-	fibs(n-1) + fibs(n - 2)
+def flat(arr)
+	p arr if arr.flatten == arr.flatten!.flatten
+	flat(arr.flatten!)
 end
 
-p fibs(5)
+flat([[1, [8, 9]], [3, 4]])
