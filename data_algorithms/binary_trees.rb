@@ -1,49 +1,47 @@
 class Tree
-	attr_reader = :root
+	attr_accessor :root
 
 	def initialize()
 	end
 
 	def build_tree(array_of_data)
-		count = 0
+		array = []
 		@root = Node.new(array_of_data.shift)
-		p @root
+		array << @root
 		until array_of_data.empty?
 			current_value = array_of_data.shift
-			add_node(current_value, count)
-			count += 1
+			array << add_node(current_value, @root)
+			p count
+			#Testing below
+			#array.each{|x| puts x.r_child if x.parent.nil?} 
+			#Testing finished
 		end
 	end
 
-	def add_node(value, count)
-		array = []
-		current = @root
-		node = Node.new(value)
-		until node.parent != nil
-			if node.value < current.value
+	def add_node(value, current_node)
+		current = current_node
+			if value < current.value
 				if current.l_child == nil
+					node = Node.new(value)
 					current.l_child = node
 					node.parent = current
-					array << current
 				else
-					current = current.l_child
+					add_node(value, current.l_child)
 				end
 			else
 				if current.r_child == nil
+					node = Node.new(value)
 					current.r_child = node
 					node.parent = current
-					array << current
+					node
 				else
-					current = current.r_child
+					add_node(value, current.r_child)
 				end
 			end
 		end
-		p array
-	end
 
 	class Node
-		attr_reader = :root
-		attr_accessor = :value, :parent, :l_child, :r_child
+		attr_accessor :value, :parent, :l_child, :r_child
 		def initialize(value, parent = nil, l_child = nil, r_child = nil)
 			@value = value
 			@parent = parent
@@ -54,6 +52,6 @@ class Tree
 end
 
 
-new = Tree.new
-new.build_tree([1,4,8,43,76,3,7])
+f = Tree.new
+f.build_tree([9,4,8,43,76,3,7])
 

@@ -1,125 +1,113 @@
-class Node
-  attr_reader :value
-  attr_accessor :parent, :lchild, :rchild
-  
-  def initialize(v, p=nil, lc=nil, rc=nil)
-    @value = v
-    @parent = p
-    @lchild = lc
-    @rchild = rc
-  end
-  
-  # Method used by tree builder, to add branches
-  def check_val(val)
-    if val <= self.value && self.lchild.nil?
-      self.lchild = Node.new(val, self)
-    elsif val <= self.value && self.lchild != nil
-      self.lchild.check_val(val)
-    elsif val > self.value && self.rchild.nil?
-      self.rchild = Node.new(val, self)
-    elsif val > self.value && self.rchild != nil
-      self.rchild.check_val(val)
-    end
-  end
-  
-  # Method used to search for given value inside the tree, using breadth first search
-  def breadth_first_search(val)
-    queue = [] << self
-    while !queue.empty?
-      n = queue.shift
-      val_to_check = n.value
+class BinaryTree
 
-      if val_to_check==val
-        puts "Value #{val} found in node: #{n}"
-        return n
-      else
-        queue << n.lchild if !n.lchild.nil?
-        queue << n.rchild if !n.rchild.nil?
-      end
+    def initialize(root = nil)
+        @root = root    
     end
-    puts "Value #{val} not found in this tree." if queue.empty?
-  end
-  
-  # Method used to search for given value inside the tree, using depth first search
-  def depth_first_search(val)
-    stack = [] << self
-    result = []
     
-    while !stack.empty?
-      n = stack.last
-      val_to_check = n.value
-      
-      if val_to_check==val
-        puts "Value #{val} found in node: #{n}"
-        return n
-      else
-        if !n.lchild.nil? && !result.include?(n.lchild)
-          stack << n.lchild
-        elsif !n.rchild.nil? && !result.include?(n.rchild)
-          stack << n.rchild
-        else
-          poppy = stack.pop
-          result << poppy
-          if stack.last==self
-            puts "Value #{val} not found in this tree."
-            break
-          end
+    def build_tree(a)
+        return nil unless a.is_a?(Array) && !a.empty?
+        
+        #shuffle the data to avoid a tree that is already sorted
+        data = a.shuffle
+
+        @root = Node.new(data.shift)
+        
+        until data.empty? do
+            add_node(data.shift)
         end
-      end
     end
-  end
-  
-  # Method used to search for given value inside the tree, using recursive depth first search
-  def dfs_rec(val)
-    x = nil
-    if self.value == val
-      puts "Value #{val} found in node: #{self}"
-      return self
-    else
-      if x.nil?
-        x = self.lchild.dfs_rec(val) if !self.lchild.nil?
-        return x if !x.nil?
-        x = self.rchild.dfs_rec(val) if !self.rchild.nil?
-        return x if !x.nil?
-      end
+   
+    def add_node(v)
+        node = Node.new(v)
+        current = @root
+        node_placed = false
+        
+        until node_placed do
+            if node.value < current.value
+                if current.lchild
+                    current = current.lchild 
+                else
+                    current.lchild = node
+                    node.parent = current
+                    node_placed = true
+                    p node
+                end
+            else
+                if current.rchild
+                    current = current.rchild 
+                else
+                    current.rchild = node
+                    node.parent = current
+                    node_placed = true
+                    p node
+                end
+            end
+        end
     end
-    puts "Value #{val} not found in this tree." if self.parent.nil? && x.nil?
-  end
+   
+    def breadth_first_search(v)
+        queue = [@root]
+        
+        until queue.empty? do
+            current = queue.shift
+            return current if current.value == v
+            queue << current.lchild if current.lchild
+            queue << current.rchild if current.rchild
+        end
+        nil
+    end
+    
+    def depth_first_search(v)
+        stack = [@root]
+        
+        until stack.empty? do
+           current = stack.pop
+           return current if current.value == v
+           stack << current.rchild if current.rchild
+           stack << current.lchild if current.lchild
+        end
+        nil
+    end
+    
+    def dfs_rec(v)
+        dfs_rec_helper(v, @root)
+    end
+    
+    def dfs_rec_helper(v, current = nil)
+        #base cases
+        return nil if current.nil?
+        return current if current.value == v
+        
+        #check the left and right children if they exist
+        left_check = dfs_rec_helper(v, current.lchild) if current.lchild
+        right_check = dfs_rec_helper(v, current.rchild) if current.rchild
+        
+        #return the left or right check if they were successful
+        return left_check if left_check
+        return right_check if right_check
+        
+        #return nil if the value was not found
+        nil
+    end
+    
+    class Node
+        attr_accessor(:value, :parent, :lchild, :rchild)
+      
+        def initialize(value, parent = nil, lchild = nil, rchild = nil)
+            @value = value
+            @parent = parent
+            @lchild = lchild
+            @rchild = rchild
+        end
+    end
 end
 
-# Method that takes an array, and creates data tree of it
-def build_tree(ary)
-  tree = Node.new(ary.first)
-  ary.each_with_index do |x, i|
-    if i>0
-      tree.check_val(x)
-    end
-  end
-  tree
-end
+#tests
+a = (1..10).to_a.shuffle
 
-# Method used to check if the tree was created properly
-def check_tree(tree, level=0)
-  if !tree.rchild.nil? || !tree.lchild.nil?
-    puts "Level: #{level}"
-    #puts tree.value
-    puts "Left branch: #{tree.value} => #{tree.lchild.value}" if !tree.lchild.nil?
-    puts "Right branch: #{tree.value} => #{tree.rchild.value}" if !tree.rchild.nil?
-    check_tree(tree.lchild, level+1) if !tree.lchild.nil?
-    check_tree(tree.rchild, level+1) if !tree.rchild.nil?
-  end
-end
+b = BinaryTree.new
+b.build_tree(a)
 
-a = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 100]
-tree = build_tree(a)
-
-
-puts "\nBreadth first search:"
-a = tree.breadth_first_search(100)
-puts a.value if !a.nil?
-puts "\nDepth first search:"
-b = tree.depth_first_search(100)
-puts b.value if !b.nil?
-puts "\nDepth first recursive search:"
-c = tree.dfs_rec(100)
-puts c.value if !c.nil?
+b.breadth_first_search(8)
+b.depth_first_search(3)
+b.dfs_rec(2)
