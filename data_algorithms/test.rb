@@ -1,113 +1,88 @@
-class BinaryTree
+# This project definitely gave me some trouble.  Thanks to some previous students'
+# solutions for providing some scaffolding for my own solution, particularly
+# Tommy Noe and Brann James.
 
-    def initialize(root = nil)
-        @root = root    
-    end
-    
-    def build_tree(a)
-        return nil unless a.is_a?(Array) && !a.empty?
-        
-        #shuffle the data to avoid a tree that is already sorted
-        data = a.shuffle
+class Tree
+  attr_accessor :root
 
-        @root = Node.new(data.shift)
-        
-        until data.empty? do
-            add_node(data.shift)
-        end
+  def initialize(value = nil)
+    @root = nil
+  end
+
+  def add_node(value, current = nil)
+    if @root.nil?
+      @root = Node.new(value)
+      current = @root
+    elsif value <= current.value
+      current.left_child.nil? ? current.left_child = Node.new(value) : add_node(value, current.left_child)
+    elsif value >= current.value
+      current.right_child.nil? ? current.right_child = Node.new(value) : add_node(value, current.right_child)
     end
-   
-    def add_node(v)
-        node = Node.new(v)
-        current = @root
-        node_placed = false
-        
-        until node_placed do
-            if node.value < current.value
-                if current.lchild
-                    current = current.lchild 
-                else
-                    current.lchild = node
-                    node.parent = current
-                    node_placed = true
-                    p node
-                end
-            else
-                if current.rchild
-                    current = current.rchild 
-                else
-                    current.rchild = node
-                    node.parent = current
-                    node_placed = true
-                    p node
-                end
-            end
-        end
+  end
+
+  def build_tree(values)
+    values.shuffle!
+    values.each { |value| add_node(value, @root) }
+  end
+
+  def breadth_first_search(search_value)
+    queue = [@root]
+    until queue.empty?
+      current = queue.shift
+      if current.value == search_value
+        puts "The value #{search_value} was found."
+        return current
+      else
+        queue << current.left_child if current.left_child
+        queue << current.right_child if current.right_child
+      end
     end
-   
-    def breadth_first_search(v)
-        queue = [@root]
-        
-        until queue.empty? do
-            current = queue.shift
-            return current if current.value == v
-            queue << current.lchild if current.lchild
-            queue << current.rchild if current.rchild
-        end
-        nil
+    puts "The value #{search_value} was not found."
+    return nil
+  end
+
+  def depth_first_search(search_value)
+    stack = [@root]
+    discovered = []
+    until stack.empty?
+      current = stack.pop
+      discovered << current
+      if current.value == search_value
+        puts "The value #{search_value} was found."
+        return current
+      else
+        stack.push(current.left_child) if current.left_child && !discovered.include?(current.left_child)
+        stack.push(current.right_child) if current.right_child && !discovered.include?(current.right_child)
+      end
     end
-    
-    def depth_first_search(v)
-        stack = [@root]
-        
-        until stack.empty? do
-           current = stack.pop
-           return current if current.value == v
-           stack << current.rchild if current.rchild
-           stack << current.lchild if current.lchild
-        end
-        nil
+    puts "The value #{search_value} was not found."
+    return nil
+  end
+
+  def dfs_rec(search_value, current = @root)
+    if current.value == search_value
+      puts "The value #{search_value} was found."
+      return current 
     end
-    
-    def dfs_rec(v)
-        dfs_rec_helper(v, @root)
-    end
-    
-    def dfs_rec_helper(v, current = nil)
-        #base cases
-        return nil if current.nil?
-        return current if current.value == v
-        
-        #check the left and right children if they exist
-        left_check = dfs_rec_helper(v, current.lchild) if current.lchild
-        right_check = dfs_rec_helper(v, current.rchild) if current.rchild
-        
-        #return the left or right check if they were successful
-        return left_check if left_check
-        return right_check if right_check
-        
-        #return nil if the value was not found
-        nil
-    end
-    
-    class Node
-        attr_accessor(:value, :parent, :lchild, :rchild)
-      
-        def initialize(value, parent = nil, lchild = nil, rchild = nil)
-            @value = value
-            @parent = parent
-            @lchild = lchild
-            @rchild = rchild
-        end
-    end
+    left_search = dfs_rec(search_value, current.left_child) if current.left_child
+    return left_search if !left_search.nil?
+    right_search = dfs_rec(search_value, current.right_child) if current.right_child
+    return right_search if !right_search.nil?
+  end
 end
 
-#tests
-a = (1..10).to_a.shuffle
+class Node
+  attr_accessor :value, :parent, :left_child, :right_child
 
-b = BinaryTree.new
-b.build_tree(a)
+  def initialize(value, parent = nil, left_child = nil, right_child = nil)
+    @value = value
+    @parent = parent
+    @left_child = left_child
+    @right_child = right_child
+  end
+end
 
-b.breadth_first_search(8)
-b.depth_first_search(3)
-b.dfs_rec(2)
+tree = Tree.new
+tree.build_tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+tree.depth_first_search(23) # => The value 23 was found.
+tree.depth_first_search(44) # => The value 44 was not found.

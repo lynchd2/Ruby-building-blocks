@@ -40,7 +40,7 @@ class Tree
 			end
 		end
 
-		def bdt(values)
+		def bft(values)
 			answer = nil
 			quene = []
 			quene << @root
@@ -59,6 +59,30 @@ class Tree
 			return answer
 		end
 
+		def dfs(values)
+			answer = nil
+			stack = []
+			stack << @root
+			visited = []
+			until stack.empty?
+				current = stack.pop
+				visited << current	
+				if current.value == values
+					answer = values
+					puts answer
+					break
+				elsif current.value != values
+					if current.l_child && !visited.include?(current.l_child)
+						stack << current
+						stack << current.l_child
+					elsif current.r_child && !visited.include?(current.r_child)
+						stack << current.r_child
+					end
+				end
+			end
+			p nil
+		end
+
 
 	class Node
 		attr_accessor :value, :parent, :l_child, :r_child
@@ -74,4 +98,4 @@ end
 
 f = Tree.new
 f.build_tree([9,4,8,43,76,3,7])
-f.bdt(9)
+f.dfs(2)
