@@ -80,9 +80,16 @@ class Tree
 					end
 				end
 			end
-			p nil
+			p nil if answer == nil
 		end
 
+		def dfs_recursion(value, current = @root)
+			puts value if current.value == value
+			left = dfs_recursion(value, current.l_child) if current.l_child
+			right = dfs_recursion(value, current.r_child) if current.r_child
+			return left if left
+			return right if right
+		end
 
 	class Node
 		attr_accessor :value, :parent, :l_child, :r_child
@@ -98,4 +105,5 @@ end
 
 f = Tree.new
 f.build_tree([9,4,8,43,76,3,7])
-f.dfs(2)
+f.dfs(9)
+f.dfs_recursion(9)
