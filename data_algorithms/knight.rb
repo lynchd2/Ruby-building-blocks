@@ -5,6 +5,7 @@ class Node
 		@y = y
 		@count = count
 		@parent = parent
+
 	end
 end
 
@@ -15,19 +16,31 @@ class Knight
 	end
 
 	def create_possible_moves
-		start = Node.new(0, 0, 1, nil)
-		tree = POSSIBLE_MOVES.collect do |move|
-			new_place = Node.new(start.x + move[0], start.y + move[1], start.count + 1, start)
+		finished_nodes = []
+		start = Node.new(0, 0, 0, nil)
+		quene = []
+		quene << start
+		until !finished_nodes.empty?
+			line = quene.shift
+			POSSIBLE_MOVES.each do |move|
+				new_node = Node.new(line.x + move[0], line.y + move[1], line.count + 1, line)
+				if (new_node.x >= 0 && new_node.x <= 10) && (new_node.y >= 0 && new_node.y <= 10) 
+					if new_node.x == 2  && new_node.y == 4
+						finished_nodes << new_node
+					else
+						quene << new_node
+					end
+				end
+			end
 		end
-		tree.find {|node| node.x == 0 && node.y == 0} 
+		p finished_nodes
 	end
-
 
 end
 
 
 class Board
-	attr_accessor :start
+	attr_accessor :start, :board, :x_coordinate, :y_coordinate
 	def initialize
 		puts "How big would you like the board to be?"
 		x_coordinate = gets.chomp.to_i
@@ -45,7 +58,7 @@ class Board
 				array << [x,y]	
 			end
 		end
-		p array
+		array
 	end
 
 end
