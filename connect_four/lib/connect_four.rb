@@ -37,6 +37,54 @@ class Board
 	end
 
 	def check_win(color)
+		#diagonal backwards for row 2 and 3
+		stopper = 0
+		count = 0
+		row = 4
+		col = 6
+		until stopper == 2
+			until row == -1 || col == -1
+				if @board[row][col] == color
+					row -= 1
+					col -= 1
+					count += 1
+					if count == 4
+						puts "#{color} won diagonally!"
+					end
+				else
+					row -= 1
+					col -= 1
+					count = 0
+				end
+			end
+			row = stopper
+			stopper += 1
+			col = 6
+		end
+		#diagonal backwards for col 1-4
+		stopper = 6
+		count = 0
+		row = 5
+		col = 6
+		until stopper == 4
+			until row == -1 || col == -1
+				if @board[row][col] == color
+					row -= 1
+					col -= 1
+					count += 1
+					if count == 4
+						puts "#{color} won diagonally!"
+					end
+				else
+					row -= 1
+					col -= 1
+					count = 0
+				end
+			end
+			row = 5
+			stopper -= 1
+			col = stopper
+		end
 		#diagonal forwards for row 2 and 3
 		stopper = 0
 		count = 0
