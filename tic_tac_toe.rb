@@ -67,7 +67,7 @@ class Game
 	  		current_player = @player2
 	  	end
 			print_board
-			puts "#{current_player.name} who has #{current_player.symbol}: please pick a number on the board for your move"
+			puts "#{current_player.name} who has #{current_player.symbol}: please pick a number on the board for your current move"
 			move = gets.chomp.to_i
 			check_move(move, current_player)
 			@count -= 1
